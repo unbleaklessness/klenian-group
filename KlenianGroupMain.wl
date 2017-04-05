@@ -16,6 +16,7 @@ bag = generated[[2]];
 
 part = Table[cayleyTable[[i, j]], {i, 30}, {j, 30}];
 partWithTitles = addTitles @ part;
+cayleyTableWithTitles = addTitles @ cayleyTable;
 
 
 (* Neutral element is always an unitary matrix. *)
@@ -35,6 +36,35 @@ normalizer = findNormalizer[cayleyTable, inverses];
 
 
 commutatives = findCommutatives @ cayleyTable;
+
+
+document = {};
+AppendTo[document, TextCell["\:0413\:0440\:0443\:043f\:043f\:0430 \:041a\:043b\:0435\:0439\:043d\:0430", "Title"]];
+AppendTo[document,
+	Grid[
+		Table[
+			If[i == 1,
+				Item[partWithTitles[[i, j]], Background -> LightBlue, Frame -> {True, False, False, False}]
+			,
+				If[j == 1,
+					Item[partWithTitles[[i, j]], Background -> LightBlue, Frame -> {False, False, False, True}]
+				,
+					partWithTitles[[i, j]]	
+				]
+			]
+		,
+			{i, Length @ partWithTitles}
+		,
+			{j, Length @ partWithTitles}
+		], ItemSize -> {2.3, 1.3}, Frame -> True
+	]
+];
+AppendTo[document, TabView @ {
+	"\:0418\:043d\:0432\:0435\:0440\:0441\:0438\:0438" -> inverses,
+	"\:041a\:043e\:043c\:043c\:0443\:0442\:0438\:0440\:0443\:044e\:0449\:0438\:0435 \:044d\:043b\:0435\:043c\:0435\:043d\:0442\:044b" -> commutatives,
+	"\:0426\:0435\:043d\:0442\:0440 \:0433\:0440\:0443\:043f\:043f\:044b" -> center
+}];
+Style[CreateDocument @ document, Purple];
 
 
 (*
