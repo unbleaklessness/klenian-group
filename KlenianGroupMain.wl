@@ -36,7 +36,7 @@ normalizer = findNormalizer[cayley, inverses];
 commutatives = findCommutatives @ cayley;
 
 
-(*CreateDocument @ {
+CreateDocument @ {
 	TextCell["\:0413\:0440\:0443\:043f\:043f\:0430 \:041a\:043b\:0435\:0439\:043d\:0430", "Title"],
 	Grid[
 		Table[
@@ -60,7 +60,7 @@ commutatives = findCommutatives @ cayley;
 		"\:041a\:043e\:043c\:043c\:0443\:0442\:0438\:0440\:0443\:044e\:0449\:0438\:0435 \:044d\:043b\:0435\:043c\:0435\:043d\:0442\:044b" -> commutatives,
 		"\:0426\:0435\:043d\:0442\:0440 \:0433\:0440\:0443\:043f\:043f\:044b" -> center
 	}
-};*)
+};
 
 
 (*
