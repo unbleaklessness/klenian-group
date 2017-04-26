@@ -9,33 +9,59 @@ Needs @ "KlenianGroupFindInverses`";
 Needs @ "KlenianGroupFindCenter`";
 Needs @ "KlenianGroupFindNormalizer`";
 Needs @ "KlenianGroupFindOrder`";
+Needs @ "KlenianGroupMultiply`";
 
 generated = getCayleyTableAndBag[];
-cayleyTable = generated[[1]];
+cayley = generated[[1]];
 bag = generated[[2]];
 
 
-part = Table[cayleyTable[[i, j]], {i, 30}, {j, 30}];
+part = Table[cayley[[i, j]], {i, 30}, {j, 30}];
 partWithTitles = addTitles @ part;
 
 
-(* Neutral element is always an unitary matrix. *)
 (* The only commutative element is an unitray matrix. *)
 neutralElement = Ceiling @ Select[bag, And @@ Table[bag[[i]] . # == # . bag[[i]], {i, Length @ bag}] &][[1]];
 neutralElementId = Position[Ceiling @ bag, neutralElement][[1, 1]];
 
 
-inverses = findInverses[cayleyTable, neutralElementId];
+inverses = findInverses[cayley, neutralElementId];
 
 
-center = findCenter @ cayleyTable;
-Print @ center;
+center = findCenter @ cayley;
 
 
-normalizer = findNormalizer[cayleyTable, inverses];
+normalizer = findNormalizer[cayley, inverses];
 
 
-commutatives = findCommutatives @ cayleyTable;
+commutatives = findCommutatives @ cayley;
+
+
+CreateDocument @ {
+	TextCell["\:0413\:0440\:0443\:043f\:043f\:0430 \:041a\:043b\:0435\:0439\:043d\:0430", "Title"],
+	Grid[
+		Table[
+			If[i == 1,
+				Item[partWithTitles[[i, j]], Background -> LightBlue, Frame -> {True, False, False, False}]
+			,
+				If[j == 1,
+					Item[partWithTitles[[i, j]], Background -> LightBlue, Frame -> {False, False, False, True}]
+				,
+					partWithTitles[[i, j]]	
+				]
+			]
+		,
+			{i, Length @ partWithTitles}
+		,
+			{j, Length @ partWithTitles}
+		], ItemSize -> {2.3, 1.3}, Frame -> True
+	],
+	TabView @ {
+		"\:041e\:0431\:0440\:0430\:0442\:043d\:044b\:0435 \:044d\:043b\:0435\:043c\:0435\:043d\:0442\:044b" -> inverses,
+		"\:041a\:043e\:043c\:043c\:0443\:0442\:0438\:0440\:0443\:044e\:0449\:0438\:0435 \:044d\:043b\:0435\:043c\:0435\:043d\:0442\:044b" -> commutatives,
+		"\:0426\:0435\:043d\:0442\:0440 \:0433\:0440\:0443\:043f\:043f\:044b" -> center
+	}
+};
 
 
 order = findOrder[cayleyTable, 6];
