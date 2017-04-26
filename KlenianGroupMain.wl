@@ -64,7 +64,7 @@ CreateDocument @ {
 };
 
 
-order = findOrder[cayleyTable, 6];
+order = findOrder[cayleyTable, neutralElementId];
 
 
 (*
