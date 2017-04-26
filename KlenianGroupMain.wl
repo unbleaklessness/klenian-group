@@ -8,6 +8,7 @@ Needs @ "KlenianGroupFindCommutative`";
 Needs @ "KlenianGroupFindInverses`";
 Needs @ "KlenianGroupFindCenter`";
 Needs @ "KlenianGroupFindNormalizer`";
+Needs @ "KlenianGroupFindOrder`";
 
 generated = getCayleyTableAndBag[];
 cayleyTable = generated[[1]];
@@ -35,6 +36,9 @@ normalizer = findNormalizer[cayleyTable, inverses];
 
 
 commutatives = findCommutatives @ cayleyTable;
+
+
+order = findOrder[cayleyTable, 6];
 
 
 (*
