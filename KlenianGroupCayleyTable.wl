@@ -1,5 +1,8 @@
 (* ::Package:: *)
 
+ 
+
+
 BeginPackage @ "KlenianGroupCayleyTable`";
 If[Position[$Path, NotebookDirectory[]] === {}, AppendTo[$Path, NotebookDirectory[]]];
 

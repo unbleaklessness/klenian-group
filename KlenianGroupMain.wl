@@ -16,7 +16,7 @@ cayley = generated[[1]];
 bag = generated[[2]];
 
 
-part = Table[cayley[[i, j]], {i, 30}, {j, 30}];
+part = Table[cayley[[i, j]], {i, 168}, {j, 168}];
 partWithTitles = addTitles @ part;
 
 
@@ -78,3 +78,24 @@ order = findOrder[cayleyTable, neutralElementId];
 3. \:041d\:0430\:0445\:043e\:0436\:0434\:0435\:043d\:0438\:0435 \:0446\:0435\:043d\:0442\:0440\:0430\:043b\:0438\:0437\:0430\:0442\:043e\:0440\:0430.
 4. \:041d\:043e\:0440\:043c\:0430\:043b\:0438\:0437\:0430\:0442\:043e\:0440 \:0434\:043b\:044f \:043f\:043e\:0434\:0433\:0440\:0443\:043f\:043f\:044b.
 *)
+
+
+powersSubgroup[1, cayley]
+
+
+powersSubgroup[2, cayley]
+
+
+powersSubgroup[3, cayley]
+
+
+powersSubgroup[4, cayley]
+
+
+powersSubgroup[5, cayley]
+
+
+powersSubgroup[6, cayley]
+
+
+powersSubgroup[7, cayley]
