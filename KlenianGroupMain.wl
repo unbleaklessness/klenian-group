@@ -87,17 +87,18 @@ powersSubgroup[cayley, 1, 7]
 
 p = 168;
 f = Select[Map[#[[1]] ^ #[[2]] &, FactorInteger @ p], PrimeQ];
+w[x_, p_] := FoldList[multiply[{#1, #2}, cayley] &, x, Table[x, p]];
 e[x_, p_] := If[Length @ p == 1, {}, Take[x, p[[2]] - 1]];
-a[x_] := Map[powersSubgroup[cayley, #, x]&, Range[p]];
+a[x_] := Map[w[#, x] &, Range[p]];
 d[x_] := e[x, Flatten @ Position[x, x[[1]]]];
 b[x_] := MemberQ[x, findPair[inverses, #]] & /@ x // c;
 c[x_] := If[MemberQ[x, False], False, True];
 h[x_] := MemberQ[x, multiply[#, cayley]] & /@ Tuples[x, 2] // c;
-g = Select[Select[d /@ Flatten[a /@ f, 1], Length @ # != 0 &], b[#] && h[#] &]
+g = Select[Select[d /@ Flatten[a /@ f, 1], Length @ # != 0 &], b[#] && h[#] && (Length @ # == 3 || Length @ # == 7) &]
 
 
-multiply[{80, 80}, cayley]
-findPair[inverses, 37]
+multiply[{101, 101, 101}, cayley]
+findPair[inverses, 65]
 
 
 
