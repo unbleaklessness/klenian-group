@@ -11,6 +11,8 @@ Needs @ "KlenianGroupFindNormalizer`";
 Needs @ "KlenianGroupFindOrder`";
 Needs @ "KlenianGroupMultiply`";
 
+Needs @ "KlenianGroupFindSubgroup`";
+
 generated = getCayleyTableAndBag[];
 cayley = generated[[1]];
 bag = generated[[2]];
@@ -64,7 +66,7 @@ CreateDocument @ {
 };
 
 
-order = findOrder[cayleyTable, neutralElementId];
+order = findOrder[cayley, neutralElementId];
 
 
 (*
@@ -80,22 +82,22 @@ order = findOrder[cayleyTable, neutralElementId];
 *)
 
 
-powersSubgroup[1, cayley]
+powersSubgroup[cayley, 1, 7]
 
 
-powersSubgroup[2, cayley]
+p = 168;
+f = Select[Map[#[[1]] ^ #[[2]] &, FactorInteger @ p], PrimeQ];
+e[x_, p_] := If[Length @ p == 1, {}, Take[x, p[[2]] - 1]];
+a[x_] := Map[powersSubgroup[cayley, #, x]&, Range[p]];
+d[x_] := e[x, Flatten @ Position[x, x[[1]]]];
+b[x_] := MemberQ[x, findPair[inverses, #]] & /@ x // c;
+c[x_] := If[MemberQ[x, False], False, True];
+h[x_] := MemberQ[x, multiply[#, cayley]] & /@ Tuples[x, 2] // c;
+g = Select[Select[d /@ Flatten[a /@ f, 1], Length @ # != 0 &], b[#] && h[#] &]
 
 
-powersSubgroup[3, cayley]
+multiply[{80, 80}, cayley]
+findPair[inverses, 37]
 
 
-powersSubgroup[4, cayley]
 
-
-powersSubgroup[5, cayley]
-
-
-powersSubgroup[6, cayley]
-
-
-powersSubgroup[7, cayley]

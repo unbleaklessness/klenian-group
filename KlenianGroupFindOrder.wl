@@ -6,7 +6,7 @@ If[Position[$Path, NotebookDirectory[]] === {}, AppendTo[$Path, NotebookDirector
 findOrder::usage = "";
 
 Begin @ "`Private`";
-Module[{},
+Module[{result, i, mult, k},
 
 	findOrder[cayley_List, neutral_Integer] := Module[{},
 		result = {};
