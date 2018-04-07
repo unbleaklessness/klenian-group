@@ -105,33 +105,26 @@ g4 // Length
 Y = X;
 X = Complement[Y, g4];
 
-
 g5 = w[X[[2]]]
 g5 // Length
 
+g6 = {6}
+g6 // Length
 
-gt[v_] := Module[{},
-	a = Length @ v;
-	b = Length @ v[[1]];
-	n = a / b // N // Floor;
-	t = a - (n * b)
-];
+sgroups = {g1, g2, g3, g4, g5, g6};
 
 
-a1 = 1;
-tr[a_] := Map[multiply[{findPair[inverses, #], a, #}, cayley] &, Range @ 168] // DeleteDuplicates;
-g1 = tr @ a1
-g1 // Length
-g2 = tr @ g1[[23]]
-g2 // Length
-g3 = tr @ 13
-g3 // Length
-g4 = tr @ g3[[2]]
-g4 // Length
+Tr @ bag1[[g1[[1]]]] // FullSimplify
+Tr @ bag1[[g1[[2]]]] // FullSimplify
 
 
+trr[x_] := Map[FullSimplify @ Tr @ bag1[[#]] &, x];
+fff[x_] := Map[trr @ # &, x] // Flatten // DeleteDuplicates;
+straces = fff @ sgroups;
 
-multiply[{a1,a1,a1,a1,a1,a1,a1},cayley]
+
+straces // Length
 
 
-Tr @ bag1[[7]]
+sylovGroups[x_] := Select[x, PrimeQ[168 / Length[#]] &];
+sylovGroups @ sgroups
