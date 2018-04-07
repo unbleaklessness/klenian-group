@@ -1,8 +1,5 @@
 (* ::Package:: *)
 
- 
-
-
 BeginPackage @ "KlenianGroupCayleyTable`";
 If[Position[$Path, NotebookDirectory[]] === {}, AppendTo[$Path, NotebookDirectory[]]];
 
@@ -20,6 +17,7 @@ Module[{},
 		p[2] = {{a, b, c}, {b, c, a}, {c, a, b}};
 		
 		bag = N[{p[1], p[2]}, 30];
+		bag1 = {p[1],p[2]};
 		
 		oldBagLength = 0;
 		While[goOnQ = oldBagLength < Length[bag]; oldBagLength = Length[bag]; goOnQ,
@@ -27,9 +25,11 @@ Module[{},
 			Do[
 				If[Head @ pDone[i, j] =!= Integer,
 					newProd = bag[[j]] . bag[[i]];
+					newProd1 = bag1[[j]].bag1[[i]];
 					pos = Position[bag, _? (# == newProd &), {1}, 1];
 					If[pos === {},
 						AppendTo[bag, newProd];
+						AppendTo[bag1, newProd1];
 					,
 						pDone[i, j] = pos[[1, 1]];
 					];
@@ -48,7 +48,7 @@ Module[{},
 			];
 		];
 	
-		{cayley, bag}
+		{cayley, bag, bag1}
 	];
 	
 ];

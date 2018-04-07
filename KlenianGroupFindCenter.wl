@@ -10,10 +10,10 @@ findCenter::usage = "";
 Begin @ "`Private`";
 Module[{},
 
-	findCenter[cayley_List] := Module[{step},
-		step[element_] := Select[element, # =!= Null &];
+	findCenter[cayley_List] := Module[{check},
+		check[element_] := Select[element, # =!= Null &];
 		Take[#, 1][[1, 1]] & /@ Select[
-			step @ # & /@ Table[
+			check @ # & /@ Table[
 				If[cayley[[i, j]] == cayley[[j, i]], {i, j}]
 			,
 				{i, Length @ cayley}

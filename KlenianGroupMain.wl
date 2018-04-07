@@ -23,6 +23,7 @@ Needs @ "KlenianGroupFindSubgroup`";
 generated = getCayleyTableAndBag[];
 cayley = generated[[1]];
 bag = generated[[2]];
+bag1 = generated[[3]];
 
 
 part = Table[cayley[[i, j]], {i, 168}, {j, 168}];
@@ -76,46 +77,61 @@ CreateDocument @ {
 order = findOrder[cayley, neutralElementId];
 
 
-powersSubgroup[cayley, 1, 7]
+X = Range @ 168;
+
+w[t_] := multiply[{findPair[inverses, #], t, #}, cayley] & /@ Range @ 168 // DeleteDuplicates;
+
+g1 = w[1]
+g1 // Length
+
+Y = X;
+X = Complement[Y, g1];
+
+g2 = w[X[[1]]]
+g2 // Length
+
+Y = X;
+X = Complement[Y, g2];
+
+g3 = w[X[[2]]]
+g3 // Length
+
+Y = X;
+X = Complement[Y, g3];
+
+g4 = w[X[[2]]]
+g4 // Length
+
+Y = X;
+X = Complement[Y, g4];
 
 
-p = 168;
-f = Select[Map[#[[1]] ^ #[[2]] &, FactorInteger @ p], PrimeQ];
-w[x_, p_] := FoldList[multiply[{#1, #2}, cayley] &, x, Table[x, p]];
-e[x_, p_] := If[Length @ p == 1, {}, Take[x, p[[2]] - 1]];
-a[x_] := Map[w[#, x] &, Range[p]];
-d[x_] := e[x, Flatten @ Position[x, x[[1]]]];
-b[x_] := MemberQ[x, findPair[inverses, #]] & /@ x // c;
-c[x_] := If[MemberQ[x, False], False, True];
-h[x_] := MemberQ[x, multiply[#, cayley]] & /@ Tuples[x, 2] // c;
-g = DeleteDuplicates @ Select[Select[d /@ Flatten[a /@ f, 1], Length @ # != 0 &], b[#] && h[#] && (Length @ # == 3 || Length @ # == 7) &]
+g5 = w[X[[2]]]
+g5 // Length
 
 
-t = DeleteDuplicates @ w[2, 7]
-t = {80,105,8,41,107,37,6}
-e[x_] := multiply[{findPair[inverses, x], #, x}, cayley] & /@ t;
-g = e /@ Range[168];
-g2 = DeleteDuplicates @ g
+gt[v_] := Module[{},
+	a = Length @ v;
+	b = Length @ v[[1]];
+	n = a / b // N // Floor;
+	t = a - (n * b)
+];
 
 
-Length @ g2
-d1 = Select[g2, Length @ # == 7 &]
-Length @ d1
+a1 = 1;
+tr[a_] := Map[multiply[{findPair[inverses, #], a, #}, cayley] &, Range @ 168] // DeleteDuplicates;
+g1 = tr @ a1
+g1 // Length
+g2 = tr @ g1[[23]]
+g2 // Length
+g3 = tr @ 13
+g3 // Length
+g4 = tr @ g3[[2]]
+g4 // Length
 
 
-multiply[{41, 41}, cayley]
-findPair[inverses, 37]
+
+multiply[{a1,a1,a1,a1,a1,a1,a1},cayley]
 
 
-g = w[#, 7] & /@ Range @ 168 // DeleteDuplicates;
-g = d /@ g
-(*g1 = Take[#, 7] & /@ Select[g, #[[7]] == 6 &]
-g1 // Length*)
-t = Select[g, Length @ # == 7 && #[[1]] == #[[-1]] &]
-t // Length
-
-
-multiply[{3, 3, 3, 3, 3, 3, 3}, cayley]
-
-
-{3, 2, 1}[[-1]]
+Tr @ bag1[[7]]
