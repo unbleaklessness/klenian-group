@@ -18,6 +18,9 @@ Module[{result, i, mult, k},
 				mult = cayley[[mult, i]];
 			];
 		];
+		For[i = 1, i <= Length @ result, i++,
+			result[[i]] = Insert[result[[i]], Length @ result[[i, 2]], 2];
+		];
 		result
 	];
 	

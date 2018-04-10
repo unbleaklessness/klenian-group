@@ -47,6 +47,46 @@ normalizer = findNormalizer[cayley, inverses];
 commutatives = findCommutatives @ cayley;
 
 
+order = findOrder[cayley, neutralElementId];
+
+
+X = Range @ 168;
+
+w[t_] := multiply[{findPair[inverses, #], t, #}, cayley] & /@ Range @ 168 // DeleteDuplicates;
+
+g1 = w[1];
+g1l = g1 // Length;
+
+Y = X;
+X = Complement[Y, g1];
+
+g2 = w[X[[1]]];
+g2l = g2 // Length;
+
+Y = X;
+X = Complement[Y, g2];
+
+g3 = w[X[[2]]];
+g3l = g3 // Length;
+
+Y = X;
+X = Complement[Y, g3];
+
+g4 = w[X[[2]]];
+g4l = g4 // Length;
+
+Y = X;
+X = Complement[Y, g4];
+
+g5 = w[X[[2]]];
+g5l = g5 // Length;
+
+g6 = {6};
+g6l = g6 // Length;
+
+sgroups = {{g1l, g1}, {g2l, g2}, {g3l, g3}, {g4l, g4}, {g5l, g5}, {g6l, g6}};
+
+
 CreateDocument @ {
 	TextCell["\:0413\:0440\:0443\:043f\:043f\:0430 \:041a\:043b\:0435\:0439\:043d\:0430", "Title"],
 	Grid[
@@ -64,54 +104,27 @@ CreateDocument @ {
 			{i, Length @ partWithTitles}
 		,
 			{j, Length @ partWithTitles}
-		], ItemSize -> {2.3, 1.3}, Frame -> True
+		], ItemSize -> {2.3, 1.3},
+		   Frame -> True,
+		   ItemStyle -> Directive[FontSize -> 16],
+		   Spacings -> {1, 1}
 	],
 	TabView @ {
-		"\:041e\:0431\:0440\:0430\:0442\:043d\:044b\:0435 \:044d\:043b\:0435\:043c\:0435\:043d\:0442\:044b" -> inverses,
-		"\:041a\:043e\:043c\:043c\:0443\:0442\:0438\:0440\:0443\:044e\:0449\:0438\:0435 \:044d\:043b\:0435\:043c\:0435\:043d\:0442\:044b" -> commutatives,
-		"\:0426\:0435\:043d\:0442\:0440 \:0433\:0440\:0443\:043f\:043f\:044b" -> center
+		"\:041e\:0431\:0440\:0430\:0442\:043d\:044b\:0435 \:044d\:043b\:0435\:043c\:0435\:043d\:0442\:044b" -> Style[inverses, FontSize -> 16],
+		"\:041a\:043e\:043c\:043c\:0443\:0442\:0438\:0440\:0443\:044e\:0449\:0438\:0435 \:044d\:043b\:0435\:043c\:0435\:043d\:0442\:044b" -> Style[commutatives, FontSize -> 16],
+		"\:0426\:0435\:043d\:0442\:0440 \:0433\:0440\:0443\:043f\:043f\:044b" -> Style[center, 50],
+		"\:041f\:043e\:0440\:044f\:0434\:043a\:0438 \:044d\:043b\:0435\:043c\:0435\:043d\:0442\:043e\:0432" -> Grid[Prepend[order, Style[#, FontWeight -> Bold, FontSize -> 23] & /@ {"\:041f\:043e\:0440\:044f\:0434\:043e\:043a", "\:041a\:043e\:043b\:0438\:0447\:0435\:0441\:0442\:0432\:043e", "\:042d\:043b\:0435\:043c\:0435\:043d\:0442\:044b"}],
+						          Frame -> All,
+						          ItemStyle -> Directive[FontSize -> 16],
+						          FrameStyle -> Directive[Gray],
+						          Spacings -> {1.5, 1.5}],
+		"\:041a\:043b\:0430\:0441\:0441\:044b \:0441\:043e\:043f\:0440\:044f\:0436\:0435\:043d\:043d\:044b\:0445 \:044d\:043b\:0435\:043c\:0435\:043d\:0442\:043e\:0432" -> Grid[Prepend[sgroups, Style[#, FontWeight -> Bold, FontSize -> 23] & /@ {"\:041f\:043e\:0440\:044f\:0434\:043e\:043a \:0433\:0440\:0443\:043f\:043f\:044b", "\:042d\:043b\:0435\:043c\:0435\:043d\:0442\:044b"}],
+		                                     Frame -> All,
+		                                     ItemStyle -> Directive[FontSize -> 16],
+		                                     FrameStyle -> Directive[Gray],
+		                                     Spacings -> {1.5, 1.5}]
 	}
 };
-
-
-order = findOrder[cayley, neutralElementId];
-
-
-X = Range @ 168;
-
-w[t_] := multiply[{findPair[inverses, #], t, #}, cayley] & /@ Range @ 168 // DeleteDuplicates;
-
-g1 = w[1]
-g1 // Length
-
-Y = X;
-X = Complement[Y, g1];
-
-g2 = w[X[[1]]]
-g2 // Length
-
-Y = X;
-X = Complement[Y, g2];
-
-g3 = w[X[[2]]]
-g3 // Length
-
-Y = X;
-X = Complement[Y, g3];
-
-g4 = w[X[[2]]]
-g4 // Length
-
-Y = X;
-X = Complement[Y, g4];
-
-g5 = w[X[[2]]]
-g5 // Length
-
-g6 = {6}
-g6 // Length
-
-sgroups = {g1, g2, g3, g4, g5, g6};
 
 
 Tr @ bag1[[g1[[1]]]] // FullSimplify
@@ -124,7 +137,3 @@ straces = fff @ sgroups;
 
 
 straces // Length
-
-
-sylovGroups[x_] := Select[x, PrimeQ[168 / Length[#]] &];
-sylovGroups @ sgroups
