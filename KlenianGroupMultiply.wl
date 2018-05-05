@@ -4,6 +4,8 @@ BeginPackage @ "KlenianGroupMultiply`";
 If[Position[$Path, NotebookDirectory[]] === {}, AppendTo[$Path, NotebookDirectory[]]];
 
 multiply::usage = "";
+multiply'::usage = "";
+pow::usage = "";
 
 Begin @ "`Private`";
 Module[{},
@@ -20,6 +22,10 @@ Module[{},
 		];
 		result
 	];
+	
+	multiply'[first_Integer, second_Integer, cayley_List] := cayley[[first, second]];
+	
+	pow[element_Integer, power_Integer, cayley_List] := Fold[multiply'[#1, #2, cayley] &, element, Table[element, power - 1]];
 
 ];
 End[];
