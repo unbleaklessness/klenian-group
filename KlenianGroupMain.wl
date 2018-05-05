@@ -68,7 +68,7 @@ For[i = 1, i <= Length @ cayley[[1]], i++,
 order
 
 orderElements = {};
-For[i = 1, i <= Length @ result, i++,
+For[i = 1, i <= Length @ order, i++,
 	AppendTo[orderElements, order[[i, 2]]];
 ];
 unique = orderElements // DeleteDuplicates;
