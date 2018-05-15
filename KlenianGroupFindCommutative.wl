@@ -10,9 +10,7 @@ findCommutativesForGroup::usage = "";
 Begin @ "`Private`";
 Module[{},
 
-	findCommutativesForOne[cayley_List, element_Integer] := Module[{},
-		Select[Range @ Length @ cayley, cayley[[#, element]] == cayley[[element, #]] &]
-	];
+	findCommutativesForOne[cayley_List, element_Integer] := Select[Range @ Length @ cayley, cayley[[#, element]] == cayley[[element, #]] &];
 	
 	findCommutatives[cayley_List] := Module[{},
 		Select[

@@ -16,10 +16,7 @@ Module[{},
 			AppendTo[result, {}];
 			For[j = 1, j <= Length @ dihedral[[1]], j++,
 				AppendTo[result[[i]], 
-					dihedral[[
-						dihedral[[findPair[inverses, i], j]],
-						i
-					]]
+					dihedral[[dihedral[[findPair[inverses, i], j]], i]]
 				];
 			];
 		];

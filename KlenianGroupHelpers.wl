@@ -17,12 +17,11 @@ Module[{fontSize, itemSize, toDigit},
 		newTable 
 	];
 
-	(* Takes first occurence of {a, b} in the list and return b, where a is element_ *)
-	findPair[list_, element_] := Module[{},
-		Select[list, #[[1]] == element &][[1, 2]]
-	];
+	(* Takes first occurence of {a, b} in the list and return `b`, where `a` is `element` argument *)
+	findPair[list_, element_] := Select[list, #[[1]] == element &][[1, 2]];
 
-	selectColumnFromTable[table_List, index_Integer] := Select[If[# =!= {}, #[[index]]] & /@ table, # =!= Null &];
+	selectColumnFromTable[table_List, index_Integer] :=
+		Select[If[# =!= {}, #[[index]]] & /@ table, # =!= Null &];
 	
 ];
 End[];
