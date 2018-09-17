@@ -12,11 +12,29 @@ Module[{},
 	
 	getCayleyTableAndBag[] :=
 	Module[{pDone, bag, oldBagLength, gamma, a, b, c, p, goOnQ, n, newProd, pos, cayley, i, j, bag1, newProd1}, 
-		gamma = Exp[2 Pi I / 7];
+		(*gamma = Exp[2 Pi I / 7];
 		{a, b, c} = {gamma^5 - gamma^2, gamma^3 - gamma^4, gamma^6 - gamma} / Sqrt[-7];
 
 		p[1] = {{gamma, 0, 0}, {0, gamma^4, 0}, {0, 0, gamma^2}};
-		p[2] = {{a, b, c}, {b, c, a}, {c, a, b}};
+		p[2] = {{a, b, c}, {b, c, a}, {c, a, b}};*)
+		
+		z = Exp[2 Pi I / 13];
+		p[1] = {
+			{z^7, 0, 0, 0, 0, 0},
+			{0, z^11, 0, 0, 0, 0},
+			{0, 0, z^8, 0, 0, 0},
+			{0, 0, 0, z^6, 0, 0},
+			{0, 0, 0, 0, z^2, 0},
+			{0, 0, 0, 0, 0, z^5}
+		};
+		p[2] = (-1 / Sqrt[13])*{
+			{z^12 - z, z^10 - z^3, z^4 - z^9, z^5 - z^8, z^2 - z^11, z^6 - z^7},
+			{z^10 - z^3, z^4 - z^9, z^12 - z, z^2 - z^11, z^6 - z^7, z^5 - z^8},
+			{z^4 - z^9, z^12 - z, z^10 - z^3, z^6 - z^7, z^5 - z^8, z^2 - z^11},
+			{z^5 - z^8, z^2 - z^11, z^6 - z^7, z - z^12, z^3 - z^10, z^9 - z^4},
+			{z^2 - z^11, z^6 - z^7, z^5 - z^8, z^3 - z^10, z^9 - z^4, z - z^12},
+			{z^6 - z^7, z^5 - z^8, z^2 - z^11, z^9 - z^4, z - z^12, z^3 - z^10}
+		};
 		
 		bag = N[{p[1], p[2]}, 30];
 		bag1 = {p[1],p[2]};
