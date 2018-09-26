@@ -45,7 +45,7 @@ Module[{},
 			Do[
 				If[Head @ pDone[i, j] =!= Integer,
 					newProd = bag[[j]] . bag[[i]];
-					newProd1 = bag1[[j]] . bag1[[i]];
+					newProd1 = FullSimplify[ComplexExpand[bag1[[j]]] . ComplexExpand[bag1[[i]]]];
 					pos = Position[bag, _? (# == newProd &), {1}, 1];
 					If[pos === {},
 						AppendTo[bag, newProd];
