@@ -19,4 +19,23 @@ m2 = (-1 / Sqrt[13])*{
 };
 
 
-MatrixPower[ComplexExpand @ m2, 2] // FullSimplify
+(*
+MatrixPower[m1, 13] \[Rule] Identity
+MatrixPower[m2, 2] \[Rule] Identify
+*)
+
+
+(* Powers of matrix. *)
+a1 = Map[FullSimplify @ MatrixPower[ComplexExpand @ m1, #1] &, Range @ 14];
+MapIndexed[{#2, TableForm @ #1} &, a1]
+
+
+(* Select identity matrices. *)
+a2 = Select[a1, # == IdentityMatrix[6] || # == -IdentityMatrix[6] &];
+Map[TableForm @ # &, a2]
+
+(* Number of identify matrices. *)
+a3 = {"Length", Length @ a2}
+
+
+
