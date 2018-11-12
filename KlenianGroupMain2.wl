@@ -2,7 +2,7 @@
 
 If[Position[$Path, NotebookDirectory[]] === {}, AppendTo[$Path, NotebookDirectory[]]];
 
-Needs @ "KlenianGroupGenerator`";
+Needs @ "KlenianGroupCayleyTableNew`";
 Needs @ "KlenianGroupHelpers`";
 Needs @ "KlenianGroupFindCommutative`";
 Needs @ "KlenianGroupFindInverses`";
@@ -13,34 +13,34 @@ Needs @ "KlenianGroupMultiply`";
 Needs @ "KlenianGroupFindSubgroup`";
 
 
-generated = generateKlenianGroup[];
-cayleyTable = generated[[1]];
-bagNumeric = generated[[2]];
-bagSymbolic = generated[[3]];
+generated = getCayleyTableAndBagNew[];
+cayley = generated[[1]];
+bag = generated[[2]];
+bag1 = generated[[3]];
 
 
-part = Table[cayleyTable[[i, j]], {i, 168}, {j, 168}];
+part = Table[cayley[[i, j]], {i, 168}, {j, 168}];
 partWithTitles = addTitles @ part;
 
 
 (* The only commutative element is an unitray matrix. *)
-neutralElement = Ceiling @ Select[bagNumeric, And @@ Table[bagNumeric[[i]] . # == # . bagNumeric[[i]], {i, Length @ bagNumeric}] &][[1]];
-neutralElementId = Position[Ceiling @ bagNumeric, neutralElement][[1, 1]];
+neutralElement = Ceiling @ Select[bag, And @@ Table[bag[[i]] . # == # . bag[[i]], {i, Length @ bag}] &][[1]];
+neutralElementId = Position[Ceiling @ bag, neutralElement][[1, 1]];
 
 
-inverses = findInverses[cayleyTable, neutralElementId];
+inverses = findInverses[cayley, neutralElementId];
 
 
-center = findCenter @ cayleyTable;
+center = findCenter @ cayley;
 
 
-normalizer = findNormalizer[cayleyTable, inverses];
+normalizer = findNormalizer[cayley, inverses];
 
 
-commutatives = findCommutatives @ cayleyTable;
+commutatives = findCommutatives @ cayley;
 
 
-(* order = findOrder[cayleyTable, neutralElementId] *)
+(* order = findOrder[cayley, neutralElementId] *)
 
 
 (*
@@ -50,9 +50,9 @@ commutatives = findCommutatives @ cayleyTable;
 *)
 
 order = {};
-For[i = 1, i <= Length @ cayleyTable[[1]], i++,
-	For[j = 1, j <= Length @ cayleyTable[[1]], j++,
-		If[pow[i, j, cayleyTable] == neutralElementId,
+For[i = 1, i <= Length @ cayley[[1]], i++,
+	For[j = 1, j <= Length @ cayley[[1]], j++,
+		If[pow[i, j, cayley] == neutralElementId,
 			AppendTo[order, {i, j}];
 			Break[];
 		];
@@ -86,20 +86,20 @@ order4 = findOrders[4];
 (* \:0413\:0435\:043d\:0435\:0440\:0430\:0446\:0438\:044f \:043f\:0430\:0440, \:043f\:043e\:0440\:043e\:0436\:0434\:0430\:044e\:0449\:0438\:0445 D4 \:043f\:043e\:0434\:0433\:0440\:0443\:043f\:043f\:0443 *)
 fmf[x_] := Select[x, # =!= {} &];
 ryr := Flatten[fmf @ # & /@ Table[
-	If[multiply[{order4[[j]], order2[[i]]}, cayleyTable] == multiply[{order2[[i]], findPair[inverses, order4[[j]]]}, cayleyTable],
-		{order2[[i]], order4[[j]]}, {}]
-	, {i, order2 // Length}
-	, {j, order4 // Length}], 1];
+If[multiply[{order4[[j]], order2[[i]]}, cayley] == multiply[{order2[[i]], findPair[inverses, order4[[j]]]}, cayley],
+	{order2[[i]], order4[[j]]}, {}]
+, {i, order2 // Length}
+, {j, order4 // Length}], 1];
 
 
 (* \:0421\:043e\:043f\:0440\:044f\:0436\:0435\:043d\:0438\:0435 \:043f\:0430\:0440, \:043f\:043e\:0440\:043e\:0436\:0434\:0430\:044e\:0449\:0438\:0445 D4 \:043f\:043e\:0434\:0433\:0440\:0443\:043f\:043f\:0443 *)
-rer[x_] := Sort[{multiply[{findPair[inverses, #], x[[1]], #}, cayleyTable], multiply[{findPair[inverses, #], x[[2]], #}, cayleyTable]}] & /@ Range @ 168;
+rer[x_] := Sort[{multiply[{findPair[inverses, #], x[[1]], #}, cayley], multiply[{findPair[inverses, #], x[[2]], #}, cayley]}] & /@ Range @ 168;
 rur = Flatten[rer @ # & /@ ryr, 1] // DeleteDuplicates;
 
 
 (* \:041d\:0430\:0445\:043e\:0436\:0434\:0435\:043d\:0438\:0435 \:0441\:0438\:043b\:043e\:0432\:0441\:043a\:043e\:0439 2-\:043f\:043e\:0434\:0433\:0440\:0443\:043f\:043f\:044b *)
-olo[x_, n_] := FoldList[multiply[{#1, #2}, cayleyTable] &, x, Table[x, n - 1]];
-ala[x_, y_, n_] := multiply[{y, #}, cayleyTable] & /@ olo[x, n];
+olo[x_, n_] := FoldList[multiply[{#1, #2}, cayley] &, x, Table[x, n - 1]];
+ala[x_, y_, n_] := multiply[{y, #}, cayley] & /@ olo[x, n];
 wew[x_, y_, n_] := Join[olo[x, n], ala[x, y, n]] // Sort;
 wewa[l_, p_] := wew[#[[2]], #[[1]], p] & /@ l // DeleteDuplicates;
 
@@ -108,8 +108,8 @@ sylov2 = wewa[ryr, 4] (* \:0421\:0438\:043b\:043e\:0432\:0441\:043a\:0438\:0435 
 
 
 (* \:041d\:0430\:0445\:043e\:0436\:0434\:0435\:043d\:0438\:0435 2 \:0438 3 \:0441\:0438\:043b\:043e\:0432\:0441\:043a\:0438\:0445 \:043f\:043e\:0434\:0433\:0440\:0443\:043f\:043f *)
-uuu[x_] := pow[x, #, cayleyTable] & /@ Range @ findPair[order, x];
-uru[x_, y_] := multiply[{findPair[inverses, x], #, x}, cayleyTable] & /@ uuu[y] // Sort // DeleteDuplicates;
+uuu[x_] := pow[x, #, cayley] & /@ Range @ findPair[order, x];
+uru[x_, y_] := multiply[{findPair[inverses, x], #, x}, cayley] & /@ uuu[y] // Sort // DeleteDuplicates;
 utu[x_] := uru[#, x] & /@ Range @ 168 // DeleteDuplicates;
 
 
@@ -125,7 +125,7 @@ sylov3 = utu[5] (* \:0421\:0438\:043b\:043e\:0432\:0441\:043a\:0438\:0435 3-\:04
 
 X = Range @ 168;
 
-w[t_] := multiply[{findPair[inverses, #], t, #}, cayleyTable] & /@ Range @ 168 // DeleteDuplicates;
+w[t_] := multiply[{findPair[inverses, #], t, #}, cayley] & /@ Range @ 168 // DeleteDuplicates;
 
 g1 = w[1];
 g1l = g1 // Length;
@@ -157,12 +157,12 @@ g5l = g5 // Length;
 g6 = {6};
 g6l = g6 // Length;
 
-sylovGroups = {{g1l, g1}, {g2l, g2}, {g3l, g3}, {g4l, g4}, {g5l, g5}, {g6l, g6}};
+sgroups = {{g1l, g1}, {g2l, g2}, {g3l, g3}, {g4l, g4}, {g5l, g5}, {g6l, g6}};
 
 
 (* \:0414\:043e\:0431\:0430\:0432\:0438\:0442\:044c \:0441\:043b\:0435\:0434\:044b \:0434\:043b\:044f \:043a\:043b\:0430\:0441\:0441\:043e\:0432 \:0441\:043e\:043f\:0440\:044f\:0436\:0435\:043d\:043d\:044b\:0445 \:044d\:043b\:0435\:043c\:0435\:043d\:0442\:043e\:0432 *)
-trace[x_] := Tr @ bagSymbolic[[x]] // FullSimplify;
-sylovGroups = Append[#, trace @ #[[2, 1]]] & /@ sylovGroups;
+trace[x_] := Tr @ bag1[[x]] // FullSimplify;
+sgroups = Append[#, trace @ #[[2, 1]]] & /@ sgroups;
 
 
 CreateDocument @ {
@@ -204,7 +204,7 @@ CreateDocument @ {
 				FrameStyle -> Directive[Gray],
 				Spacings -> {1.5, 1.5}]
 		}}, Alignment -> Top],
-		"\:041a\:043b\:0430\:0441\:0441\:044b \:0441\:043e\:043f\:0440\:044f\:0436\:0435\:043d\:043d\:044b\:0445 \:044d\:043b\:0435\:043c\:0435\:043d\:0442\:043e\:0432" -> Grid[Prepend[sylovGroups, Style[#, FontWeight -> Bold, FontSize -> 23] & /@ {"\:041f\:043e\:0440\:044f\:0434\:043e\:043a \:043a\:043b\:0430\:0441\:0441\:0430", "\:041a\:043b\:0430\:0441\:0441\:044b", "\:0421\:043b\:0435\:0434 \:043a\:043b\:0430\:0441\:0441\:0430"}],
+		"\:041a\:043b\:0430\:0441\:0441\:044b \:0441\:043e\:043f\:0440\:044f\:0436\:0435\:043d\:043d\:044b\:0445 \:044d\:043b\:0435\:043c\:0435\:043d\:0442\:043e\:0432" -> Grid[Prepend[sgroups, Style[#, FontWeight -> Bold, FontSize -> 23] & /@ {"\:041f\:043e\:0440\:044f\:0434\:043e\:043a \:043a\:043b\:0430\:0441\:0441\:0430", "\:041a\:043b\:0430\:0441\:0441\:044b", "\:0421\:043b\:0435\:0434 \:043a\:043b\:0430\:0441\:0441\:0430"}],
 			Frame -> All,
 		    ItemStyle -> Directive[FontSize -> 16],
 		    FrameStyle -> Directive[Gray],
