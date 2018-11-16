@@ -3,10 +3,10 @@
 BeginPackage @ "GroupGenerator`";
 If[Position[$Path, NotebookDirectory[]] === {}, AppendTo[$Path, NotebookDirectory[]]];
 
-generateGroup::usage = "Generates a group. Takes a list of initial elements (matrices) as the first argument and modulus of the group as second argument.";
+generateGroup::usage = "Generates a group. Takes a list of initial elements (matrices) as the first argument and modulus of the group as the second argument.";
 groupInfo::usage = "Prints out group elements and number of elements in the group. Takes group (list of matrices) as the first argument.";
-generateCayleyTable::usage = "";
-(* REMOVE *) cayleyForSecondBasis::usage = "";
+generateCayleyTable::usage = "Generates Cayley table of the group. Takes list of all group elements as first argument, returns Cayley table (2D array of indexes).";
+(*(* REMOVE *) cayleyForSecondBasis::usage = "";*)
 
 Begin @ "`Private`";
 
@@ -40,21 +40,6 @@ group = {m1, m2, m3, m4};
 
 g = generateGroup[group, 7];
 groupInfo @ g;
-cayleyForSecondBasis[g, 7]
-(*c = generateCayleyTable[g, 7];
-Print @ c*)
 
 
-si[d_, m_] := (m - 1) * IdentityMatrix @ d;
-r = Mod[g[[1]] . g[[8]] . si[2, 7], 7]
-Position[g, r]
 
-
-tl1 = {{1}, {}, {2}, {3}, {}, {4}};
-tl2 = {{}, {4}, {}, {}, {2}, {}};
-te[x_, y_] := MapIndexed[If[#1 == {}, tl2[[First @ #2]], #1] &, tl1];
-tr[] := te[tl1, tl2];
-tr[]
-
-
-1 == 2
