@@ -55,14 +55,13 @@ main = do
     let initials = [[[0, 3], [2, 4]], [[0, 1], [6, 0]], [[1, 1], [0, 1]], [[3, 0], [0, 5]]]
     let modulus = 7
     
-    let group = generateGroup modulus initials
-    let groupUnique = groupNub modulus group
-    let cayley = cayleyTable modulus groupUnique
+    let group = groupNub modulus $ generateGroup modulus initials
+    let cayley = cayleyTable modulus group
     
     print $ group
     print $ length group
-    print $ groupUnique
-    print $ length groupUnique
-    print $ length cayleyUnique
+    print $ length cayley
+    print $ matMultMod modulus (group !! 117) (group !! 23)
+    print $ group !! (cayley !! 117 !! 23)
 
     return ()
