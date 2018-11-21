@@ -1,6 +1,6 @@
 module Main where
 
-import Data.List (transpose, nub, elemIndex)
+import Data.List (transpose, nub, elemIndex, elem)
 import Data.Fixed (mod')
 import Data.Maybe (fromMaybe)
 
@@ -32,14 +32,35 @@ cayleyTable modulus group = [[fromMaybe (-1) $ products !! i !! j `elemIndex` gr
     where products = outer (matMultMod modulus) group group
           len = length group - 1
 
+identity :: Num a => Int -> [[a]]
+identity dimensions = [[fromIntegral $ fromEnum $ i == j | j <- [0 .. len]] | i <- [0 .. len]]
+    where len = dimensions - 1
+
+secondIdentity :: Num a => Int -> a -> [[a]]
+secondIdentity dimensions modulus = (map . map) (* (modulus - 1)) (identity dimensions)
+
+removeItem :: Eq a => a -> [a] -> [a]
+removeItem _ [] = []
+removeItem x (y:ys) | x == y = removeItem x ys
+                    | otherwise = y : removeItem x ys
+
+groupNub :: Real a => a -> [[[a]]] -> [[[a]]]
+groupNub modulus group = foldl check group group
+    where left = secondIdentity (length (group !! 0)) modulus
+          check a b = if element `elem` a then removeItem b a else a
+              where element = matMultMod modulus left b
+
 main :: IO ()
 main = do
     let initials = [[[0, 3], [2, 4]], [[0, 1], [6, 0]], [[1, 1], [0, 1]], [[3, 0], [0, 5]]]
     let modulus = 7
     let group = generateGroup modulus initials
+    let groupUnique = groupNub modulus group
     let cayley = cayleyTable modulus group
     
     print $ group
     print $ length group
+    print $ groupUnique
+    print $ length groupUnique
 
     return ()
