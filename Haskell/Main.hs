@@ -13,16 +13,19 @@ fixedPoint :: Eq a => (a -> a) -> a -> a
 fixedPoint f x = converge (==) $ iterate f x
 
 combinations :: [a] -> [b] -> [[(a, b)]]
-combinations l1 l2 = (\ a -> (\ b -> (a, b)) <$> l2) <$> l1
+combinations l1 l2 = [[(a, b) | a <- l1] | b <- l2]
 
 outer :: (a -> b -> c) -> [a] -> [b] -> [[c]]
-outer f l1 l2 = (\ a -> (\ b -> uncurry f b) <$> a) <$> combinations l1 l2
+outer f l1 l2 = (fmap . fmap) (uncurry f) (combinations l1 l2)
 
 matMult :: Num a => [[a]] -> [[a]] -> [[a]]
 matMult a b = [[sum $ zipWith (*) ar bc | bc <- (transpose b)] | ar <- a]
 
 matMultMod :: Real a => a -> [[a]] -> [[a]] -> [[a]]
 matMultMod modulus a b = (map . map) (flip mod' modulus) (matMult a b)
+
+matPow :: Num a => [[a]] -> Int -> [[a]]
+matPow m p = iterate (matMult m) m !! max 0 p
 
 generateGroup :: Real a => a -> [[[a]]] -> [[[a]]]
 generateGroup modulus = fixedPoint (\ a -> nub $ concat $ outer (matMultMod modulus) a a)
@@ -47,21 +50,27 @@ removeItem x (y:ys) | x == y = removeItem x ys
 groupNub :: Real a => a -> [[[a]]] -> [[[a]]]
 groupNub modulus group = foldl check group group
     where i = secondIdentity (length (group !! 0)) modulus
-          check a b = if element b `elem` a then removeItem b a else a
-          element = matMultMod modulus i
+          check a b = if e b `elem` a then removeItem b a else a
+          e = matMultMod modulus i
 
 main :: IO ()
 main = do
     let initials = [[[0, 3], [2, 4]], [[0, 1], [6, 0]], [[1, 1], [0, 1]], [[3, 0], [0, 5]]]
     let modulus = 7
-    
+
+    -- let m1 = [[0, 3], [2, 4]]
+    -- let m2 = [[0, 1], [6, 0]]
+    -- let m3 = m2 `matMult` (m1 `matPow` 2) `matMult` m2
+    -- let initials = [m1, m3]
+    -- let modulus = 7
+
+    -- let initials = [[[2, 0], [0, 7]], [[0, 5], [5, 3]], [[1, 1], [0, 1]], [[0, 1], [12, 0]], [[2, 2], [3, 10]]]
+    -- let modulus = 13
+  
     let group = groupNub modulus $ generateGroup modulus initials
     let cayley = cayleyTable modulus group
-    
+
     print $ group
     print $ length group
-    print $ length cayley
-    print $ matMultMod modulus (group !! 117) (group !! 23)
-    print $ group !! (cayley !! 117 !! 23)
-
+    
     return ()
