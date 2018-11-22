@@ -53,6 +53,13 @@ groupNub modulus group = foldl check group group
           check a b = if e b `elem` a then removeItem b a else a
           e = matMultMod modulus i
 
+getCommutative :: [[Int]] -> [(Int, Int)]
+getCommutative cayley = nub $ so <$> filter eq [(i, j) | i <- [0 .. l], j <- [0 .. l]]
+    where l = length cayley - 1
+          eq (i, j) = cayley !! i !! j == cayley !! j !! i
+          so (a, b) = if a > b then (b, a) else (a, b)
+          
+
 main :: IO ()
 main = do
     let initials = [[[0, 3], [2, 4]], [[0, 1], [6, 0]], [[1, 1], [0, 1]], [[3, 0], [0, 5]]]
@@ -65,12 +72,14 @@ main = do
     -- let modulus = 7
 
     -- let initials = [[[2, 0], [0, 7]], [[0, 5], [5, 3]], [[1, 1], [0, 1]], [[0, 1], [12, 0]], [[2, 2], [3, 10]]]
-    -- let modulus = 13
+    -- let modulus = 12
   
     let group = groupNub modulus $ generateGroup modulus initials
     let cayley = cayleyTable modulus group
+    let commutative = getCommutative cayley
 
     print $ group
     print $ length group
+    print $ length $ commutative
     
     return ()
