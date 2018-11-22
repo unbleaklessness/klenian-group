@@ -31,9 +31,8 @@ generateGroup :: Real a => a -> [[[a]]] -> [[[a]]]
 generateGroup modulus = fixedPoint (\ a -> nub $ concat $ outer (matMultMod modulus) a a)
 
 cayleyTable :: Real a => a -> [[[a]]] -> [[Int]]
-cayleyTable modulus group = [[fromMaybe (-1) $ products !! i !! j `elemIndex` group | j <- [0 .. l]] | i <- [0 .. l]]
+cayleyTable modulus group = (map . map) (fromMaybe (-1) . flip elemIndex group) products
     where products = outer (matMultMod modulus) group group
-          l = length group - 1
 
 identity :: Num a => Int -> [[a]]
 identity dimensions = [[fromIntegral $ fromEnum $ i == j | j <- [0 .. l]] | i <- [0 .. l]]
