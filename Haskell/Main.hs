@@ -39,8 +39,8 @@ identity :: Num a => Int -> [[a]]
 identity dimensions = [[fromIntegral $ fromEnum $ i == j | j <- [0 .. l]] | i <- [0 .. l]]
     where l = dimensions - 1
 
-secondIdentity :: Num a => Int -> a -> [[a]]
-secondIdentity dimensions modulus = (map . map) (* (modulus - 1)) (identity dimensions)
+identity2 :: Num a => Int -> a -> [[a]]
+identity2 dimensions modulus = (map . map) (* (modulus - 1)) (identity dimensions)
 
 removeItem :: Eq a => a -> [a] -> [a]
 removeItem _ [] = []
@@ -49,7 +49,7 @@ removeItem x (y:ys) | x == y = removeItem x ys
 
 groupNub :: Real a => a -> [[[a]]] -> [[[a]]]
 groupNub modulus group = foldl check group group
-    where i = secondIdentity (length (group !! 0)) modulus
+    where i = identity2 (length (group !! 0)) modulus
           check a b = if e b `elem` a then removeItem b a else a
           e = matMultMod modulus i
 
