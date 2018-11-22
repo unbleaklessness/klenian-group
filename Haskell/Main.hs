@@ -53,12 +53,23 @@ groupNub modulus group = foldl check group group
           check a b = if e b `elem` a then removeItem b a else a
           e = matMultMod modulus i
 
-getCommutative :: [[Int]] -> [(Int, Int)]
-getCommutative cayley = nub $ so <$> filter eq [(i, j) | i <- [0 .. l], j <- [0 .. l]]
-    where l = length cayley - 1
-          eq (i, j) = cayley !! i !! j == cayley !! j !! i
-          so (a, b) = if a > b then (b, a) else (a, b)
-          
+cayleyProducts :: Int -> [(Int, Int)]
+cayleyProducts n = [(i, j) | i <- [0 .. n], j <- [0 .. n]]
+
+filterProducts :: ((Int, Int) -> Bool) -> [(Int, Int)] -> [(Int, Int)]
+filterProducts f products = nub $ so <$> filter f products
+    where so (a, b) = if a > b then (b, a) else (a, b)
+
+getCommutatives :: [[Int]] -> [(Int, Int)] -> [(Int, Int)]
+getCommutatives cayley products = filterProducts check products
+    where check (i, j) = cayley !! i !! j == cayley !! j !! i
+
+getInverses :: [[Int]] -> [(Int, Int)] -> Int -> [(Int, Int)]
+getInverses cayley products identityIndex = filterProducts check products
+    where check (i, j) = cayley !! i !! j == identityIndex
+
+identity2Index :: Real a => [[[a]]] -> a -> Int
+identity2Index group modulus = fromMaybe (-1) $ identity2 (length (group !! 0)) modulus `elemIndex` group
 
 main :: IO ()
 main = do
@@ -76,10 +87,14 @@ main = do
   
     let group = groupNub modulus $ generateGroup modulus initials
     let cayley = cayleyTable modulus group
-    let commutative = getCommutative cayley
+    let iden2 = identity2Index group modulus
+    let products = cayleyProducts $ length cayley - 1
+    let commutative = getCommutatives cayley products
+    let inverses = getInverses cayley products iden2
 
     print $ group
     print $ length group
     print $ length $ commutative
+    print $ length $ inverses
     
     return ()
