@@ -40,3 +40,42 @@ findCenter[cayley_List] := #[[1, 1]] & /@ Select[Table[
 
 End[];
 EndPackage[];
+
+
+generateElements[initials_List, mod_Integer] := FixedPoint[Union[Flatten[Outer[Mod[#1 . #2, mod] &, #, #, 1], 1]] &, initials];
+m1 = {{0, 3},{2, 4}}
+m2 = {{0, 1}, {6, 0}}
+modulus = 7
+mult[m1_, m2_] := Mod[m1 . m2, modulus];    print     print "=== TEST MULTIPLICATION ==="
+
+    let i1 = 29
+    let i2 = 76
+    print $ matMultMod modulus (groupUnique !! i1) (groupUnique !! i2)
+    print $ group !! (cayleyUnique !! i2 !! i1)
+
+    print "=== TEST INVERSES ==="
+
+    let el = 13
+    let inv = findSecondInPairs inverses el
+    print $ group !! (cayleyUnique !! el !! inv)
+  
+"=== TEST MULTIPLICATION ==="
+
+    let i1 = 29
+    let i2 = 76
+    print $ matMultMod modulus (groupUnique !! i1) (groupUnique !! i2)
+    print $ group !! (cayleyUnique !! i2 !! i1)
+
+    print "=== TEST INVERSES ==="
+
+    let el = 13
+    let inv = findSecondInPairs inverses el
+    print $ group !! (cayleyUnique !! el !! inv)
+  
+
+m3 = mult
+initials = {m1, m3}
+
+
+group = generateElements[initials, modulus];
+group // Length
